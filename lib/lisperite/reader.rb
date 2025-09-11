@@ -8,26 +8,40 @@ class Lisperite::Reader
   def read
     tokens = []
     while(!io.eof?)
-      tokens <<
-        case c = io.getc
-        when "("
-          list
-        else
-          atom
-        end
+      c = io.getc
+      while(c == " "); c = io.getc end
+      next if io.eof?
+      io.ungetc(c)
+      tokens << next_token
     end
     tokens
   end
 
   private
 
-  def list
-    token = {type: :list, content: []}
-    while(!io.eof?)
+  def next_token
+    c = io.getc
+    case c
+    when "("
+      list
+    else
+      io.ungetc(c)
+      atom
+    end
+  end
+
+  def atom
+    token = {type: :atom, content: ""}
+    c = io.getc
+    while(!c.nil? && !io.eof?)
+      token[:content] << c
       c = io.getc
-      return token if(")" == c)
+      return token if c == " "
     end
 
-    raise "expecting list to be closed with: #{c}, but none was found"
+    token
+  end
+
+  def list
   end
 end

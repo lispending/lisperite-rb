@@ -1,12 +1,27 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "debug"
+require "zeitwerk"
+@loader = Zeitwerk::Loader.for_gem
+@loader.enable_reloading
+@loader.setup
+
 require "bundler/setup"
+require "debug"
 require "lisperite"
-
-# You can add fixtures and/or initialization code here to make experimenting
-# with your gem easier. You can also use a different console, if you like.
-
+require "rspec"
 require "irb"
+require "zeitwerk"
+require_relative "../spec/spec_helper"
+
+loader = Zeitwerk::Loader.new
+loader.enable_reloading
+loader.setup
+
+include Lisperite::SpecHelper
+
+def reload!
+  @loader.reload
+end
+
 IRB.start(__FILE__)

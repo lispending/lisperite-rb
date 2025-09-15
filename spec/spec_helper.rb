@@ -6,7 +6,6 @@ module Lisperite
   module SpecHelper
     FIXTURES_PATH = File.expand_path("../fixtures/", __FILE__).freeze
 
-
     def fixture_path(file_name)
       File.join(FIXTURES_PATH, file_name)
     end

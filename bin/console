@@ -8,15 +8,11 @@ require "zeitwerk"
 
 require "bundler/setup"
 require "debug"
+require "irb"
 require "lisperite"
 require "rspec"
-require "irb"
 require "zeitwerk"
 require_relative "../spec/spec_helper"
-
-loader = Zeitwerk::Loader.new
-loader.enable_reloading
-loader.setup
 
 include Lisperite::SpecHelper
 

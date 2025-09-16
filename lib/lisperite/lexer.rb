@@ -5,7 +5,7 @@ module Lisperite
     def initialize(source)
       @reader = Lisperite::Reader.new(source)
       @line = 1
-      @column = 0
+      @column = 1
     end
 
     def run
@@ -32,10 +32,16 @@ module Lisperite
 
     def atom
       str = ""
-      while !reader.eof? && reader.next
+      start = {line: @line, column: @column}
+      while !reader.eof? && consume
+        break if reader.current == "\s"
         str << reader.current
       end
-      {type: :atom, value: str}
+      {type: :atom, value: str, position: {start: start, end: {line: @line, column: @column}}}
+    end
+
+    def consume
+      reader.next.tap { @column += 1 }
     end
   end
 end

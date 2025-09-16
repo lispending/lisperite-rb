@@ -11,7 +11,9 @@ module Lisperite
     def run
       tokens = []
       until reader.eof?
-        tokens << next_token
+        consume while reader.peek == "\s"
+        token = next_token
+        tokens << token if token
       end
 
       tokens
@@ -21,7 +23,6 @@ module Lisperite
 
     def next_token
       return if reader.eof?
-
       case reader.peek
       when "..."
         nil

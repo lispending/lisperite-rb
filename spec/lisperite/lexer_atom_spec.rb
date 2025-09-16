@@ -12,6 +12,12 @@ RSpec.describe Lisperite::Lexer do
     expect(tokens.map { |t| t[:value] }).to eq ["lisperite", "a", "ruby", "lispey", "thingy"]
   end
 
+  it "ignores non-significant spaces" do
+    tokens = described_class.new("    lisperite tiny            lisp    ").run
+
+    expect(tokens.map { |t| t[:value] }).to eq ["lisperite", "tiny", "lisp"]
+  end
+
   it "keeps track of columns where atoms start and end" do
     tokens = described_class.new("lisperite").run
 

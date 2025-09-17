@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "lisperite"
+require "debug"
 
 module Lisperite
   module SpecHelper

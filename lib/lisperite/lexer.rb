@@ -11,11 +11,6 @@ module Lisperite
     def run
       tokens = []
       until reader.eof?
-        consume while reader.peek == "\s"
-        if reader.peek == "\n" || reader.peek == "\r"
-          new_line
-          next
-        end
         token = next_token
         tokens << token unless token.nil?
       end
@@ -25,7 +20,34 @@ module Lisperite
     private
 
     def next_token
-      atom
+      return if reader.eof?
+
+      consume while reader.peek == "\s"
+      if reader.peek == "\n" || reader.peek == "\r"
+        new_line
+        return
+      end
+
+      case reader.peek
+      when "("
+        list
+      else
+        atom
+      end
+    end
+
+    def list
+      start = {column: @column, line: @line}
+      consume
+      tokens = []
+      until reader.peek == ")"
+        token = next_token
+        tokens << token unless token.nil?
+      end
+      consume if reader.peek == ")"
+      {type: :list, value: tokens, position: {
+        start: start, end: {column: @column - 1, line: @line}
+      }}
     end
 
     def atom
@@ -34,10 +56,10 @@ module Lisperite
       end_col = @column
 
       until reader.eof?
-        break if reader.peek == "\n" || reader.peek == "\r"
+        break if reader.peek == "\n" || reader.peek == "\r" || reader.peek == ")"
         c = consume
         break if c == "\s"
-        end_col += 1
+        end_col = @column
         value << c
       end
 

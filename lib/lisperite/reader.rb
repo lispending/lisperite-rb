@@ -1,6 +1,5 @@
 module Lisperite
   class Reader
-    attr_reader :current
     private attr_reader :io
 
     def initialize(source)
@@ -10,7 +9,6 @@ module Lisperite
         else
           File.exist?(source) ? File.new(source) : StringIO.new(source)
         end
-      @current = nil
     end
 
     def eof?
@@ -18,7 +16,7 @@ module Lisperite
     end
 
     def next
-      @current = io.getc
+      io.getc
     end
 
     def peek

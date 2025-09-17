@@ -31,11 +31,6 @@ RSpec.describe Lisperite::Reader do
     expect(reader.peek).to eq nil
   end
 
-  it "remembers the last consumed char" do
-    reader.next
-    expect(reader.current).to eq "h"
-  end
-
   context "files" do
     it "creates a reader from a file path" do
       reader = described_class.new(fixture_path("hello_world.txt"))
